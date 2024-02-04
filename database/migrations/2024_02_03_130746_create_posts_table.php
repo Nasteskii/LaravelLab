@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('author')->unsigned()->default(0);
+            $table->foreign('author')->references('id')->on('users')->onDelete('cascade');
+            $table->string('title');
+            $table->text('body');
+            $table->string('slug')->default('');
+            $table->timestamp('published_on')->useCurrent();
+            $table->timestamp('last_modified')->useCurrent()->useCurrentOnUpdate();
+            $table->boolean('active')->default(true);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('posts');
+    }
+};
